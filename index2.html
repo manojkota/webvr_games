@@ -1,0 +1,172 @@
+<html>
+<head>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script src="https://aframe.io/releases/0.3.1/aframe.min.js"></script>
+    <script src="//cdn.rawgit.com/donmccurdy/aframe-extras/v2.6.0/dist/aframe-extras.min.js"></script>
+    <script src="https://rawgit.com/ngokevin/aframe-text-component/master/dist/aframe-text-component.min.js"></script>
+    <!--<script src="spawnerjs.js"></script>-->
+    <!--<script src="clicklistener.js"></script>-->
+    <script src="projectilejs.js"></script>
+    <!--<script src="colliderjs.js"></script>
+    <script src="gamepadlistener.js"></script>-->
+    <script src="meshstandard.js"></script>
+    <script src="waypoint.js"></script>
+    <script src="timer.js"></script>
+</head>
+<body>
+    <!--<a-scene id="myScene">-->
+    <a-scene id="myScene" fog="type: linear; color: #2f2f38; near: 1; far: 10; density: 0.0025">
+
+        <a-assets>
+            <img id="ground" src="assets/lava.jpg">
+            <audio id="lavasound" src="assets/lavamud.wav">
+
+                <a-asset-item id="crate-obj" src="assets/Landscape_Final_withSpaceship.obj"></a-asset-item>
+                <a-asset-item id="crate-mtl" src="assets/Landscape_Final_withSpaceship.mtl"></a-asset-item>
+                <!--<a-asset-item id="platform1-obj" src="assets/platform1.obj"></a-asset-item>
+                <a-asset-item id="platform2-obj" src="assets/platform2.obj"></a-asset-item>-->
+
+                <!--<a-mixin id="laser"
+                         geometry="primitive: cylinder; radius: 0.05; translate: 0 -2 0; buffer: false"
+                         material="color: green; metalness: 0.2; opacity: 0.4; roughness: 0.3"
+                         rotation="90 0 0" projectile collider="target: .enemy"></a-mixin>-->
+
+                <a-mixin id="waypoint" geometry="primitive:dodecahedron; radius:0.4;"
+                         material="shader:meshstandard; color:gold; emissive:#f00; opacity:.75" class="clickable"></a-mixin>
+
+        </a-assets>
+        <!--<a-entity id="bgsound" sound="src: #lavasound; volume:1; autoplay:true;loop: true;on: loading"></a-entity>-->
+        <a-entity id="mainCamera" position="-4.5 11 0.64" rotation="0 90 0" waypointcam>
+            <a-entity camera="userHeight: .025"
+                      id="player"
+                      fov="2"
+                      look-controls
+                      gamepad-controls="flyEnabled: true"
+                      universal-controls
+                      sound="src: #lavasound;
+                            volume:1; autoplay:true;loop: true;
+                            on: click">
+                <a-entity cursor="fuse:true; fuseTimeout:3000;" position="0 0 -1" geometry="primitive: ring; radiusInner:.01; radiusOuter:.02" material="color: #000; shader: flat" raycaster="far: 2; interval: 1000; objects: .clickable">
+                    <a-animation duration="500" begin="click" easing="ease-in" attribute="material.color" fill="both" from="#000" to="#f00"></a-animation>
+                    <a-animation duration="2000" begin="cursor-fusing" easing="ease-in" attribute="material.color" fill="both" from="#000" to="#0f0"></a-animation>
+                </a-entity>
+                <a-entity light="type:point; color:white; intensity: 1; distance:25; penumbra:0.3; type:spot; angle:25; decay:1;" position="0 .1 0"></a-entity>
+                <a-entity timer text="text: 60" rotation="0 0 0" scale="0.75 0.75 0.75" position="1.5 2 -5"></a-entity>
+                <a-animation attribute="position" begin="level0" to="20 20 0" dur="1000"></a-animation>
+            </a-entity>
+        </a-entity>
+
+        <!--<a-collada-model src="assets/Rock1.dae" position="1 5 -1" rotation="0 30 0" scale="0.2 0.2 0.2"></a-collada-model>-->
+        <!--<a-entity id="mat" material="shader: flat; color: white; src: #ceiling_LM" obj-model="obj: #ceiling_GEO"></a-entity>-->
+        <a-obj-model mtl="#crate-mtl" src="#crate-obj" material="shader:meshstandard;fog:false;" position="1 10 -1" scale="0.5 0.5 0.5"></a-obj-model>
+        <!--steps-->
+        <!--<a-obj-model src="#platform1-obj" material="shader:meshstandard;fog:false;" position="-5 12 -1" scale="500 500 500"></a-obj-model>-->
+        <a-entity static-body geometry="primitive: box; depth: 2; height: 0.2; width: 0.2" position="-4.5 10.50 0.64"
+                  material="shader: flat; color: gray"></a-entity>
+        <a-entity static-body geometry="primitive: box; depth: 2; height: 0.2; width: 0.2" position="-7 9 0.4"
+                  material="shader: flat; color: gray; roughness:0.5"></a-entity>
+        <a-entity geometry="primitive: box; depth: 2; height: 0.5; width: 0.2" position="-10 7 -3"
+                  material="shader: flat; color: gray"></a-entity>
+        <a-entity geometry="primitive: box; depth: 2; height: 0.5; width: 0.2" position="-13.68 5.66 -1"
+                  material="shader: flat; color: gray"></a-entity>
+        <a-entity geometry="primitive: box; depth: 2; height: 0.5; width: 0.2" position="-13.68 5.66 -3" rotation="0 60 0"
+                  material="shader: flat; color: gray"></a-entity>
+        <a-entity geometry="primitive: box; depth: 2; height: 0.25; width: 0.1;" rotation="0 60 0" position="-16.88 3.42 -1.43"
+                  material="shader: flat; color: gray"></a-entity>
+        <a-entity static-body geometry="primitive: box; depth: 2; height: 0.2; width: 0.2" position="-20.90 1.76 -0.56"
+                  material="shader: flat; color: gray"></a-entity>
+        <a-torus-knot id="knot" color="blue" arc="180" p="1" q="5" radius="0.5" radius-tubular="0.1" position="-20.90 2.76 1.16" material="shader:meshstandard;"
+                      sound="src: url(assets/321103__nsstudios__blip1.wav); volume:1; autoplay:true;loop: false;on: click"></a-torus-knot>
+        
+        <!--<a-entity id="boxText" geometry="primitive: box" draw="background: #D7E8FF" textwrap="textAlign: center; x: 128; y: 128; text: Hello world!" color="green" position="-6.5 11 0.64"></a-entity>-->
+        
+
+
+
+        <!--ground-->
+        <a-entity static-body geometry="primitive: box; depth: 10; height: 1; width: 20" position="-15.36 -0.51 -0.99"
+                  material="shader: flat; src: #ground"></a-entity>
+
+        <!--beamers-->
+        <a-dodecahedron mixin="waypoint" waypoint position="-4.5 10.75 0.64" scale="0.5 0.5 0.5" id="current"></a-dodecahedron>
+        <a-dodecahedron mixin="waypoint" waypoint position="-7.10 9.25 0.4" scale="0.5 0.5 0.5" name="waypoint1" id="waypoint1"></a-dodecahedron>
+        <a-dodecahedron mixin="waypoint" waypoint position="-10 7.55 -3" scale="0.5 0.5 0.5" name="waypoint2"></a-dodecahedron>
+        <a-dodecahedron mixin="waypoint" waypoint position="-13.68 5.83 -1" scale="0.5 0.5 0.5" data-futile="true" name="waypoint3"></a-dodecahedron>
+        <a-dodecahedron mixin="waypoint" waypoint position="-13.88 5.93 -3" scale="0.5 0.5 0.5" name="waypoint4"></a-dodecahedron>
+        <a-dodecahedron mixin="waypoint" waypoint position="-16.88 3.70 -1.43" scale="0.5 0.5 0.5" name="waypoint5"></a-dodecahedron>
+        <a-dodecahedron mixin="waypoint" waypoint position="-20.90 2 -0.56" scale="0.5 0.5 0.5" name="waypoint6"></a-dodecahedron>
+
+        <!--Button for restart-->
+        <a-entity text="text: Mission Failed" rotation="0 0 0" scale="2 2 2" position="22 21 0"></a-entity>
+
+        <a-entity light="type:ambient; color:#000; density: 0.5;"></a-entity>
+        <a-light type="point" color="#fff" position="20.60 228.21 30.10" intensity="0.5"></a-light>
+        <!--<a-light type="point" color="#dda700" position="-20.60 228.21 30.10" intensity="0.5"></a-light>-->
+        <!--<a-light type="point" color="red" position="-20.90 0 1" intensity="0.2"></a-light>-->
+
+        <a-sky src="assets/sky.png"></a-sky>
+    </a-scene>
+    <script>
+
+        var sceneEl = document.querySelector('a-scene');
+
+        $(function () {
+            document.querySelector('#knot').addEventListener('click', function () {
+                document.querySelector('#knot').setAttribute('visible', 'false');
+                //document.querySelector('#pickText').setAttribute('visible', 'true');
+                //setTimeout(function(){
+                //    document.querySelector('#pickText').setAttribute('visible', 'false');
+                //},2000);
+                
+            });
+
+        });
+
+        var generateBirds = function () {
+            for (var i = 0; i < 20; i++) {
+                var copier = document.querySelector('.copier').cloneNode(true);
+                var x = getRandomIntInclusive(-10, 10);
+                var z = getRandomIntInclusive(-10, 10);
+                copier.childNodes[1].setAttribute('from', x + ' 2 ' + z);
+                if (x > 6) {
+                    var x1 = getRandomIntInclusive(-10, 0);
+                    copier.childNodes[1].setAttribute('to', x1 + ' 2 0');
+                }
+                if (x < 6) {
+                    var x1 = getRandomIntInclusive(0, 10);
+                    copier.childNodes[1].setAttribute('to', x1 + ' 2 0');
+                }
+                sceneEl.appendChild(copier);
+            }
+        }
+
+        function getRandomIntInclusive(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        //sceneEl.addEventListener('gamepadbuttondown', function (e) {
+        //    var boxEl = document.createElement('a-sphere');
+        //    var position = new THREE.Vector3();
+        //    boxEl.setAttribute('position', position);
+        //    boxEl.setAttribute('color', 'red');
+        //    boxEl.setAttribute('radius', '0.2');
+        //    sceneEl.appendChild(boxEl)
+        //});
+
+        //sceneEl.addEventListener('click', function (e) {
+        //    var boxEl = document.createElement('a-sphere');
+        //    //console.log(document.querySelector('a-camera').components.camera.camera.getWorldDirection());
+        //    var position = new THREE.Vector3();
+        //    boxEl.setAttribute('position', sceneEl.camera.getWorldDirection());
+        //    //boxEl.setAttribute('velocity', '2 0 ' + sceneEl.camera.getWorldDirection().x);
+        //    boxEl.setAttribute('color', 'red');
+        //    boxEl.setAttribute('radius', '0.2');
+        //    boxEl.emit('start-link1');
+        //    sceneEl.appendChild(boxEl)
+        //});
+
+    </script>
+</body>
+</html>

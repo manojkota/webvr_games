@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>VR football game</title>
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script src="https://aframe.io/releases/0.3.1/aframe.min.js"></script>
+</head>
+<body>
+
+    <a-scene>
+        <a-assets>
+            <img id="ball-sprite" src="assets/ball.png">
+        </a-assets>
+        
+        <a-image id="ball" src="#ball-sprite" transparent="true" position="0 1.5 -5">
+            <a-animation attribute="position" dur="700" easing="linear" repeat="0" begin="jump" to="0 5 -5"></a-animation>
+            <a-animation attribute="position" dur="700" easing="linear" repeat="0" begin="jump-back" to="0 1.5 -5"></a-animation>
+        </a-image>
+
+        <a-camera id="player" look-controls position="0 1.5 0"></a-camera>
+        <a-sky src="assets/peach-gradient-1.jpg"></a-sky>
+
+    </a-scene>
+
+
+    <script>
+        var s$ = function (e) { return document.getElementById(e); };
+        var ball = document.querySelector('#ball');
+
+        $(function () {
+            ball.childNodes[1].addEventListener('animationend', function () {
+                ball.emit('jump-back');
+            });
+
+            document.querySelector('a-scene').addEventListener('click', function () {
+                ball.emit('jump');
+            });
+        })
+
+        if (window.DeviceMotionEvent) {
+            
+            window.addEventListener('devicemotion', function (ev) {
+                var acc = ev.accelerationIncludingGravity;
+                dmHdlr(acc.x, acc.y, acc.z);
+            }, false);
+        }
+        
+        var lastDM = new Date().getTime();
+        function dmHdlr(aX, aY, aZ) {
+            var currDM = new Date().getTime();
+            if (currDM < lastDM + 1000) {return;}
+            if (aX && aX.toFixed(0) > 20) {
+                ball.emit('jump');
+            }
+        }
+
+    </script>
+
+</body>
+</html>
